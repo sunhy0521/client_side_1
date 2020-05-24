@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="row">
       <div class="col-12">
         <card type="chart">
@@ -20,7 +19,7 @@
                          :class="{active: bigLineChart.activeIndex === index}"
                          :id="index">
                     <input type="radio"
-                           @click="initBigChart(index)"
+                           @click="mainRSSIControl(option,index)"
                            name="options" autocomplete="off"
                            :checked="bigLineChart.activeIndex === index">
                     {{option}}
@@ -30,14 +29,22 @@
             </div>
           </template>
           <div class="chart-area">
-            <line-chart style="height: 100%"
-                        ref="bigChart"
-                        chart-id="big-line-chart"
-                        :chart-data="bigLineChart.chartData"
-                        :gradient-colors="bigLineChart.gradientColors"
-                        :gradient-stops="bigLineChart.gradientStops"
-                        :extra-options="bigLineChart.extraOptions">
-            </line-chart>
+            <Echarts ref="mainRSSIChart1"
+              style="height:100%"
+              title="RSSI1"
+              dataUrl="http://127.0.0.1:8000/users/device1"
+              v-bind:startFlag="mainChartStartFlag"
+            >
+            </Echarts>
+            </div>
+          <div class="chart-area">
+            <Echarts ref="mainRSSIChart2"
+              style="height:100%"
+              title="RSSI1"
+              dataUrl="http://127.0.0.1:8000/users/device2"
+              v-bind:startFlag="mainChartStartFlag"
+            >
+            </Echarts>
           </div>
         </card>
       </div>
@@ -129,6 +136,7 @@
 <script>
   import LineChart from '@/components/Charts/LineChart';
   import BarChart from '@/components/Charts/BarChart';
+  import Echarts from '@/components/Echarts'
   import * as chartConfigs from '@/components/Charts/config';
   import TaskList from './Dashboard/TaskList';
   import UserTable from './Dashboard/UserTable';
@@ -139,10 +147,18 @@
       LineChart,
       BarChart,
       TaskList,
-      UserTable
+      UserTable,
+      Echarts
+
+    },
+    props: {
     },
     data() {
       return {
+        mainChartStartFlag: {
+          type: Boolean,
+          default: false
+        },
         bigLineChart: {
           allData: [
             [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
@@ -235,7 +251,18 @@
       }
     },
     methods: {
-      initBigChart(index) {
+      mainRSSIControl(option,index){
+        if(index==0)
+        {
+          this.mainChartStartFlag =false;
+        }
+        else
+        {
+          this.mainChartStartFlag =true;;
+        }
+        this.bigLineChart.activeIndex = index;
+      },
+      initBigChart(index, option) {
         let chartData = {
           datasets: [{
             fill: true,
@@ -254,7 +281,7 @@
           }],
           labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
         }
-        this.$refs.bigChart.updateGradients(chartData);
+
         this.bigLineChart.chartData = chartData;
         this.bigLineChart.activeIndex = index;
       }
