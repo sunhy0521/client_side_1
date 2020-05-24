@@ -2,7 +2,10 @@
   <div class="content">
     <fade-transition :duration="100" mode="out-in">
       <!-- your content here -->
-      <router-view></router-view>
+      <keep-alive exclude="xxx,yyy">
+          <router-view v-if="$route.meta.keepAlive"></router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </fade-transition>
   </div>
 </template>

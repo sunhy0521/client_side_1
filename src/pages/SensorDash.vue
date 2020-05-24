@@ -273,7 +273,7 @@
   import config from '@/config';
 
   export default {
-    name: 'Dashboard',
+    name: 'SensorDash',
     components: {
       LineChart,
       BarChart,

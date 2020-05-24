@@ -3,7 +3,7 @@
     "completedTasks": "Completed Tasks",
     "dailySales": "Daily Sales",
     "performance": "RSSI Monitor",
-    "cameraMonitoring":"Backgroud Truth",
+    "cameraMonitoring":"CAM",
     "simpleTable": "Simple Table",
     "totalShipments": "Total Shipments",
     "chartCategories": [
@@ -118,6 +118,7 @@
     "title": "Creative Tim",
     "shortTitle": "CT",
     "dashboard": "Device Sniffer",
+    "sensorboard": "Sensor Sniffer",
     "icons": "Sensor Sniffer",
     "maps": "Package Sniffer",
     "notifications": "Gesture Sniffer",
