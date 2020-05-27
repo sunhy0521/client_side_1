@@ -24,21 +24,27 @@ export default {
     },
     data() {
       return {
+          x_data: [],
           series_data: [],
-          store_data:[]
+          store_data:[],
+          myChart: null,
+          wsConnection: null
       }
     },
     methods:{
         pageResize(){
-            let myChart = this.$echarts.init(this.$refs.chart);
-            myChart.resize();
+            //this.myChart = this.$echarts.init(this.$refs.chart);
+            this.myChart.resize();
         },
         myEcharts(){
             //let myChart = this.$echarts.init(document.getElementById('echart'));
-            let myChart = this.$echarts.init(this.$refs.chart);
+            this.myChart = this.$echarts.init(this.$refs.chart);
             var texttitle=this.$props.titleText;
             console.log(this.$props.titleText);
             console.log(this.$props.dataUrl);
+
+            this.x_data=[...new Array(100).keys()];
+            this.series_data = [...new Array(100)];
             // 指定图表的配置项和数据
             var option = {
                 backgroundColor: new this.$echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [{
@@ -63,12 +69,12 @@ export default {
                 legend: {
                     data:['分贝(dB)'],
                     textStyle: {
-                    fontSize: 12,
-                    color: '#F1F1F3'
-        }
+                        fontSize: 12,
+                        color: '#F1F1F3'
+                    }
                 },
                 xAxis: {
-                    data: [ ],
+                    data: this.x_data,
                     axisLabel: {
                         color: '#55CF3E',
                         fontSize: 10
@@ -99,43 +105,84 @@ export default {
                     blendMode: 'lighter',
                     showSymbol: false,
                     hoverAnimation: false,
-                    data: [0, 0, 0, 0, 0, 0, 0]
+                    data: Array.from(this.series_data)
                 }]
             };
-            myChart.setOption(option);
-            myChart.resize();
             //
             
-            this.series_data = [...new Array(1000)];
-            var x_data=[...new Array(1000).keys()];
+            this.myChart.setOption(option);
+            this.myChart.resize();
+
             setInterval(() => {
                 if(!this.startFlag)
                 {
-                    this.$http
-                    .get(this.$props.dataUrl,{withCredentials:true})
-                        .then(response => {
-                            const data = response.data;
-                            this.series_data.shift();
-                            this.series_data.push(data.data);
-                            this.store_data.push(data.data);
-                            // const titleText1=this.$props.titleText;
-                            // console.log(titleText1);
-                            myChart.setOption({
-                                xAxis: {
-                                    data: x_data
-                                },
-                                // title:{
-                                //     text: titleText1
-                                // },
-                                series: [{
-                                        type: 'line',
-                                        data: Array.from(this.series_data)
-                                    }]
-                                });
-                        });
+                    this.wsConnection.send("hello");
+                    // this.$http
+                    // .get(this.$props.dataUrl,{withCredentials:true})
+                    //     .then(response => {
+                    //         const data = response.data;
+                    //         this.series_data.shift();
+                    //         this.series_data.push(data.data);
+                    //         this.store_data.push(data.data);
+
+                    //         // const titleText1=this.$props.titleText;
+                    //         // console.log(titleText1);
+                    //         this.myChart.setOption({
+                    //             xAxis: {
+                    //                 data: x_data
+                    //             },
+                    //             // title:{
+                    //             //     text: titleText1
+                    //             // },
+                    //             series: [{
+                    //                     type: 'line',
+                    //                     data: Array.from(this.series_data)
+                    //                 }]
+                    //             });
+                    //     });
                 }
-            }, 500);
-        }
+            }, 20);
+        },
+        updateEchart(data)
+        {
+            this.series_data.shift();
+            this.series_data.push(data.data);
+            this.store_data.push(data.data);
+
+            this.myChart.setOption({
+                series: [{
+                    type: 'line',
+                    data: Array.from(this.series_data)
+                }]
+            });
+        },
+            updated() {
+                this.myEcharts();
+            },
+            wsInitWebSocket()
+            {
+                console.log("Starting connection to WebSocket Server")
+                this.wsConnection = new WebSocket("ws://127.0.0.1:8000/wsapi/api/123/")
+                this.wsConnection.onmessage = this.wsRecvOnMessage;
+                this.wsConnection.onopen = this.wsOnopen;
+                this.wsConnection.onerror = this.wsOnError;
+                this.wsConnection.onclose = this.wsClose;
+            },
+            wsOnopen(){ // 连接建立之后执行send方法发送数据
+            },
+            wsOnError(){ // 连接建立失败重连
+                this.wsInitWebSocket();
+            },
+            wsRecvOnMessage(event){ // 数据接收
+                const redata = JSON.parse(event.data);
+                this.updateEchart(redata);
+            },
+            wsSend(Data){ // 数据发送
+                this.wsConnection.send(Data);
+            },
+            wsClose(e){  // 关闭
+                console.log('断开连接',e);
+            },
     },
     mounted() {
         this.myEcharts();
@@ -144,11 +191,8 @@ export default {
         });
     },
     created() {
-        //this.myEcharts();
-    },
-    updated() {
-        this.myEcharts();
-    },
+        this.wsInitWebSocket();
+    }
 }
 </script>
 
