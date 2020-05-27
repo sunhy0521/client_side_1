@@ -4,10 +4,10 @@ import NotFound from "@/pages/NotFoundPage.vue";
 // Admin pages
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
 const Sensorboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/SensorDash.vue");
-// const Profile = () => import(/* webpackChunkName: "common" */ "@/pages/Profile.vue");
-// const Notifications = () => import(/* webpackChunkName: "common" */"@/pages/Notifications.vue");
-// const Icons = () => import(/* webpackChunkName: "common" */ "@/pages/Icons.vue");
-// const Maps = () => import(/* webpackChunkName: "common" */ "@/pages/Maps.vue");
+const PackageDash = () => import(/* webpackChunkName: "common" */ "@/pages/PackageDash.vue");
+const GestureDash = () => import(/* webpackChunkName: "common" */"@/pages/GestureDash.vue");
+const GroupIntro = () => import(/* webpackChunkName: "common" */ "@/pages/GroupIntro.vue");
+const ContactList = () => import(/* webpackChunkName: "common" */ "@/pages/ContactList.vue");
 // const Typography = () => import(/* webpackChunkName: "common" */ "@/pages/Typography.vue");
 // const TableList = () => import(/* webpackChunkName: "common" */ "@/pages/TableList.vue");
 
@@ -33,30 +33,38 @@ const routes = [
           keepAlive: true
         }
       },      
-      // {
-      //   path: "icons",
-      //   name: "Sensor Sniffer",
-      //   component: Icons,
-      //   meta: {
-      //     keepAlive: true
-      //   }
-      // },
-      // {
-      //   path: "maps",
-      //   name: "Package Sniffer",
-      //   component: Maps,
-      //   meta: {
-      //     keepAlive: true
-      //   }
-      // },
-      // {
-      //   path: "notifications",
-      //   name: "Gesture Sniffer",
-      //   component: Notifications,
-      //   meta: {
-      //     keepAlive: true
-      //   }
-      // },
+      {
+        path: "packageboard",
+        name: "Package Sniffer",
+        component: PackageDash,
+        meta: {
+          keepAlive: true
+        }
+      }, 
+      {
+        path: "gestureboard",
+        name: "Gesture Sniffer",
+        component: GestureDash,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "groupintro",
+        name: "Group Introduction",
+        component: GroupIntro,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "contact",
+        name: "Contact Us",
+        component: ContactList,
+        meta: {
+          keepAlive: true
+        }
+      },
       // {
       //   path: "profile",
       //   name: "Gourp Introduction",

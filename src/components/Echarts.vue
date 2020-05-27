@@ -22,7 +22,12 @@ export default {
             //  default:'Device2',
         }
     },
-
+    data() {
+      return {
+          series_data: [],
+          store_data:[]
+      }
+    },
     methods:{
         pageResize(){
             let myChart = this.$echarts.init(this.$refs.chart);
@@ -101,7 +106,7 @@ export default {
             myChart.resize();
             //
             
-            var series_data = [...new Array(1000)];
+            this.series_data = [...new Array(1000)];
             var x_data=[...new Array(1000).keys()];
             setInterval(() => {
                 if(!this.startFlag)
@@ -110,8 +115,9 @@ export default {
                     .get(this.$props.dataUrl,{withCredentials:true})
                         .then(response => {
                             const data = response.data;
-                            series_data.shift();
-                            series_data.push(data.data);
+                            this.series_data.shift();
+                            this.series_data.push(data.data);
+                            this.store_data.push(data.data);
                             // const titleText1=this.$props.titleText;
                             // console.log(titleText1);
                             myChart.setOption({
@@ -123,7 +129,7 @@ export default {
                                 // },
                                 series: [{
                                         type: 'line',
-                                        data: Array.from(series_data)
+                                        data: Array.from(this.series_data)
                                     }]
                                 });
                         });

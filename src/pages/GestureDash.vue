@@ -6,7 +6,7 @@
           <template slot="header">
             <div class="row">
               <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
-                <!-- <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5> -->
+                <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
                 <h2 class="card-title">{{$t('dashboard.performance')}}</h2>
               </div>
               <div class="col-sm-6">
@@ -31,7 +31,7 @@
             <div class="chart-area">
               <Echarts ref="mainRSSIChart1"
                 style="height:100%"
-                titleText="Device 1"
+                title="RSSI1"
                 dataUrl="http://127.0.0.1:8000/users/device1"
                 v-bind:startFlag="mainChartStartFlag"
               >
@@ -40,7 +40,7 @@
           <div class="chart-area">
             <Echarts ref="mainRSSIChart2"
               style="height:100%"
-              titleText="Device 2"
+              title="RSSI1"
               dataUrl="http://127.0.0.1:8000/users/device2"
               v-bind:startFlag="mainChartStartFlag"
             >
@@ -76,22 +76,22 @@
             </div>
           </template>
           <div class="chart-area">
-            <!-- <Echarts ref="mainRSSIChart1"
+            <Echarts ref="mainRSSIChart1"
               style="height:100%"
               title="RSSI1"
               dataUrl="http://127.0.0.1:8000/users/device1"
               v-bind:startFlag="mainChartStartFlag"
             >
-            </Echarts> -->
+            </Echarts>
           </div>
           <div class="chart-area">
-            <!-- <Echarts ref="mainRSSIChart1"
+            <Echarts ref="mainRSSIChart1"
               style="height:100%"
               title="RSSI1"
               dataUrl="http://127.0.0.1:8000/users/device1"
               v-bind:startFlag="mainChartStartFlag"
             >
-            </Echarts> -->
+            </Echarts>
           </div>
         </card>
       </div>
@@ -101,7 +101,7 @@
         <card type="chart">
           <template slot="header">
             <h2 class="card-category">Device 1</h2>
-            <h3 class="card-title">统计学特征</h3>
+            <h3 class="card-title">Feature 1</h3>
           </template>
             <div class="chart-area">
               <line-chart style="height: 100%"
@@ -118,7 +118,7 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 1</h5>
-            <h3 class="card-title">细粒度时序特征</h3>
+            <h3 class="card-title">Feature 2</h3>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
@@ -134,7 +134,7 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 1</h5>
-            <h3 class="card-title">频域特征</h3>
+            <h3 class="card-title">Feature 3</h3>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
@@ -150,15 +150,15 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 1</h5>
-            <h3 class="card-title">预测结果</h3>
+            <h3 class="card-title">Feature 4</h3>
           </template>
           <div class="chart-area">
-            <!-- <line-chart style="height: 100%"
+            <line-chart style="height: 100%"
                         chart-id="green-line-chart"
                         :chart-data="greenLineChart.chartData"
                         :gradient-stops="greenLineChart.gradientStops"
                         :extra-options="greenLineChart.extraOptions">
-            </line-chart> -->
+            </line-chart>
           </div>
         </card>
       </div>
@@ -168,7 +168,7 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">统计学特征</h3>
+            <h3 class="card-title">Feature 1</h3>
           </template>
             <div class="chart-area">
               <line-chart style="height: 100%"
@@ -185,7 +185,7 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">细粒度时序特征</h3>
+            <h3 class="card-title">Feature 2</h3>
           </template>
           <div class="chart-area">
             <bar-chart style="height: 100%"
@@ -201,7 +201,7 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">频域特征</h3>
+            <h3 class="card-title">Feature 3</h3>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
@@ -217,7 +217,7 @@
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">预测结果</h3>
+            <h3 class="card-title">Feature 4</h3>
           </template>
           <div class="chart-area">
             <line-chart style="height: 100%"
@@ -273,7 +273,7 @@
   import config from '@/config';
 
   export default {
-    name: 'Dashboard',
+    name: 'GestureBoard',
     components: {
       LineChart,
       BarChart,
