@@ -32,7 +32,7 @@
               <Echarts ref="mainRSSIChart1"
                 style="height:100%"
                 titleText="Device 1"
-                dataUrl="http://127.0.0.1:8000/users/device1"
+                dataUrl="ws://127.0.0.1:8000/wsapi/api/device1/"
                 v-bind:startFlag="mainChartStartFlag"
               >
               </Echarts>
@@ -41,7 +41,7 @@
             <Echarts ref="mainRSSIChart2"
               style="height:100%"
               titleText="Device 2"
-              dataUrl="http://127.0.0.1:8000/users/device2"
+              dataUrl="ws://127.0.0.1:8000/wsapi/api/device2/"
               v-bind:startFlag="mainChartStartFlag"
             >
             </Echarts>
@@ -100,57 +100,145 @@
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h2 class="card-category">Device 1</h2>
-            <h3 class="card-title">统计学特征</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 1</h2>
+                <h3 class="card-title">统计学特征</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
             <div class="chart-area">
-              <line-chart style="height: 100%"
+              <!-- <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
                         :chart-data="purpleLineChart.chartData"
                         :gradient-colors="purpleLineChart.gradientColors"
                         :gradient-stops="purpleLineChart.gradientStops"
                         :extra-options="purpleLineChart.extraOptions">
-              </line-chart>
+              </line-chart> -->
             </div>  
         </card>
       </div>
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 1</h5>
-            <h3 class="card-title">细粒度时序特征</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 1</h2>
+                <h3 class="card-title">细粒度时序特征</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
-            <bar-chart style="height: 100%"
+            <!-- <bar-chart style="height: 100%"
                       chart-id="blue-bar-chart"
                       :chart-data="blueBarChart.chartData"
                       :gradient-stops="blueBarChart.gradientStops"
                       :extra-options="blueBarChart.extraOptions">
-            </bar-chart>
+            </bar-chart> -->
           </div>
         </card>
       </div>
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 1</h5>
-            <h3 class="card-title">频域特征</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 1</h2>
+                <h3 class="card-title">频域特征</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
-            <line-chart style="height: 100%"
+            <!-- <line-chart style="height: 100%"
                         chart-id="green-line-chart"
                         :chart-data="greenLineChart.chartData"
                         :gradient-stops="greenLineChart.gradientStops"
                         :extra-options="greenLineChart.extraOptions">
-            </line-chart>
+            </line-chart> -->
           </div>
         </card>
       </div>
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 1</h5>
-            <h3 class="card-title">预测结果</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 1</h2>
+                <h3 class="card-title">预测结果</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
             <!-- <line-chart style="height: 100%"
@@ -167,65 +255,153 @@
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">统计学特征</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 2</h2>
+                <h3 class="card-title">统计学特征</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
             <div class="chart-area">
-              <line-chart style="height: 100%"
+              <!-- <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
                         :chart-data="purpleLineChart.chartData"
                         :gradient-colors="purpleLineChart.gradientColors"
                         :gradient-stops="purpleLineChart.gradientStops"
                         :extra-options="purpleLineChart.extraOptions">
-              </line-chart>
+              </line-chart> -->
             </div>  
         </card>
       </div>
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">细粒度时序特征</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 2</h2>
+                <h3 class="card-title">细粒度时序特征</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
-            <bar-chart style="height: 100%"
+            <!-- <bar-chart style="height: 100%"
                       chart-id="blue-bar-chart"
                       :chart-data="blueBarChart.chartData"
                       :gradient-stops="blueBarChart.gradientStops"
                       :extra-options="blueBarChart.extraOptions">
-            </bar-chart>
+            </bar-chart> -->
           </div>
         </card>
       </div>
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">频域特征</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 2</h2>
+                <h3 class="card-title">频域特征</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
-            <line-chart style="height: 100%"
+            <!-- <line-chart style="height: 100%"
                         chart-id="green-line-chart"
                         :chart-data="greenLineChart.chartData"
                         :gradient-stops="greenLineChart.gradientStops"
                         :extra-options="greenLineChart.extraOptions">
-            </line-chart>
+            </line-chart> -->
           </div>
         </card>
       </div>
       <div class="col-lg-3" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
-            <h5 class="card-category">Device 2</h5>
-            <h3 class="card-title">预测结果</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="card-category">Device 2</h2>
+                <h3 class="card-title">预测结果</h3>
+              </div>
+              <div class="col-sm-6">
+                 <h2 class="card-category">Results</h2>
+                  <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in commFeatureCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
           </template>
           <div class="chart-area">
-            <line-chart style="height: 100%"
+            <!-- <line-chart style="height: 100%"
                         chart-id="green-line-chart"
                         :chart-data="greenLineChart.chartData"
                         :gradient-stops="greenLineChart.gradientStops"
                         :extra-options="greenLineChart.extraOptions">
-            </line-chart>
+            </line-chart> -->
           </div>
         </card>
       </div>
@@ -285,6 +461,7 @@
     },
     data() {
       return {
+        echart1Serial: [],
         mainChartStartFlag: {
           type: Boolean,
           default: false
@@ -378,6 +555,9 @@
       },
       bigLineChartCategories() {
         return this.$t('dashboard.chartCategories');
+      },
+      commFeatureCategories(){
+        return this.$t('dashboard.commFeatureCategories')
       }
     },
     methods: {
@@ -390,6 +570,8 @@
         {
           this.mainChartStartFlag =true;;
         }
+        console.log(this.$refs.mainRSSIChart1.store_data);
+        console.log(this.$refs.mainRSSIChart2.store_data);
         this.bigLineChart.activeIndex = index;
       },
       initBigChart(index, option) {

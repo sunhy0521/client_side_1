@@ -162,7 +162,8 @@ export default {
             wsInitWebSocket()
             {
                 console.log("Starting connection to WebSocket Server")
-                this.wsConnection = new WebSocket("ws://127.0.0.1:8000/wsapi/api/123/")
+                //this.wsConnection = new WebSocket("ws://127.0.0.1:8000/wsapi/api/123/")
+                this.wsConnection = new WebSocket(this.dataUrl)
                 this.wsConnection.onmessage = this.wsRecvOnMessage;
                 this.wsConnection.onopen = this.wsOnopen;
                 this.wsConnection.onerror = this.wsOnError;

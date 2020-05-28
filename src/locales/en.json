@@ -14,6 +14,9 @@
       "on",
       "off"
     ],
+    "commFeatureCategories": [
+      "show"
+    ],
     "tasks": "Tasks({count})",
     "today": "Today",
     "dropdown": {
