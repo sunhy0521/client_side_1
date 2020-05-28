@@ -126,13 +126,13 @@
             </div>
           </template>
             <div class="chart-area">
-              <!-- <line-chart style="height: 100%"
+              <line-chart style="height: 100%"
                         chart-id="purple-line-chart"
                         :chart-data="purpleLineChart.chartData"
                         :gradient-colors="purpleLineChart.gradientColors"
                         :gradient-stops="purpleLineChart.gradientStops"
                         :extra-options="purpleLineChart.extraOptions">
-              </line-chart> -->
+              </line-chart>
             </div>  
         </card>
       </div>
