@@ -32,6 +32,9 @@ export default {
       }
     },
     methods:{
+        restoreStoreData(){
+        this.store_data=[];
+        },
         pageResize(){
             //this.myChart = this.$echarts.init(this.$refs.chart);
             this.myChart.resize();
@@ -47,6 +50,7 @@ export default {
             this.series_data = [...new Array(100)];
             // 指定图表的配置项和数据
             var option = {
+                animation: false,
                 backgroundColor: new this.$echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [{
                     offset: 0,
                     color: '#272a3c'
@@ -76,7 +80,7 @@ export default {
                 xAxis: {
                     data: this.x_data,
                     axisLabel: {
-                        color: '#55CF3E',
+                        color: '#959596',
                         fontSize: 10
                     }
                 },

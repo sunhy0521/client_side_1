@@ -24,9 +24,15 @@ import './registerServiceWorker'
 
 import echarts from 'echarts'
 import axios from 'axios'
+import jstat from 'jstat'
+import fft from 'fft'
+// import fft-js from 'fft-js'
 
 Vue.prototype.$echarts = echarts
 Vue.prototype.$http = axios
+Vue.prototype.$jstat = jstat
+Vue.prototype.$fft = fft
+// Vue.prototype.$fftjs =fftjs
 
 Vue.use(BlackDashboard);
 Vue.use(VueRouter);
