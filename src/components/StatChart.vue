@@ -76,7 +76,7 @@ export default {
                     }
                 }]
             };
-            console.log('test'+this.series_data);
+            //console.log('test'+this.series_data);
             this.myChart.setOption(option);
             this.myChart.resize();    
        },

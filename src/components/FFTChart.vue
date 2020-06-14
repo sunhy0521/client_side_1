@@ -13,12 +13,12 @@ export default {
             default: 4
         },
         series_data: {
-            default: [0, 0, 0, 0]
+            default: [0, 0, 0, 0, 0, 0, 0, 0]
         }
     },
     data() {
       return {
-            x_data: [ ],
+            // x_data: [ ],
             // store_data:[120, 200, 150, 80, 70, 110, 130],
             myChart: null,
             wsConnection: null
@@ -52,7 +52,7 @@ export default {
                     },
                 },
                 series: [{
-                    data: [0, 0, 0, 0],
+                    data: this.series_data,
                     type: 'line',
                     lineStyle: {
                         color: '#55CF3E',
@@ -63,7 +63,7 @@ export default {
                     hoverAnimation: false,
                 }]
             };
-            console.log('test'+this.series_data);
+            //console.log('test'+this.series_data);
             this.myChart.setOption(option);
             this.myChart.resize();    
        },

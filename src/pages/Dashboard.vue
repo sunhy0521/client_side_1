@@ -201,20 +201,13 @@
             </div>
           </template>
           <div class="chart-area">
+            <!-- Device 1 FFT展示 -->
             <FFTChart 
-            style="height=100%"
+            style="height: 100%"
             ref="FFTChart1"
             v-bind:series_data="this.fftSerial"
             >
             </FFTChart>
-            <!-- <FinegrainedChart style="">
-            </FinegrainedChart> -->
-            <!-- <line-chart style="height: 100%"
-                        chart-id="green-line-chart"
-                        :chart-data="greenLineChart.chartData"
-                        :gradient-stops="greenLineChart.gradientStops"
-                        :extra-options="greenLineChart.extraOptions">
-            </line-chart> -->
           </div>
         </card>
       </div>
@@ -353,7 +346,7 @@
                          :class="{active: bigLineChart.activeIndex === index}"
                          :id="index">
                     <input type="radio"
-                           @click="mainRSSIControl(option,index)"
+                           @click="showFFT2(option,index)"
                            name="options" autocomplete="off"
                            :checked="bigLineChart.activeIndex === index">
                     {{option}}
@@ -363,12 +356,12 @@
             </div>
           </template>
           <div class="chart-area">
-            <!-- <line-chart style="height: 100%"
-                        chart-id="green-line-chart"
-                        :chart-data="greenLineChart.chartData"
-                        :gradient-stops="greenLineChart.gradientStops"
-                        :extra-options="greenLineChart.extraOptions">
-            </line-chart> -->
+            <FFTChart 
+            style="height: 100%"
+            ref="FFTChart2"
+            v-bind:series_data="this.fftSeria2"
+            >
+            </FFTChart>
           </div>
         </card>
       </div>
@@ -391,7 +384,7 @@
                          :class="{active: bigLineChart.activeIndex === index}"
                          :id="index">
                     <input type="radio"
-                           @click="mainRSSIControl(option,index)"
+                           @click="showFFT2(option,index)"
                            name="options" autocomplete="off"
                            :checked="bigLineChart.activeIndex === index">
                     {{option}}
@@ -401,6 +394,8 @@
             </div>
           </template>
           <div class="chart-area">
+            <!-- <h4>Contiki</h4>
+            <h4>SmartRF</h4> -->
             <!-- <line-chart style="height: 100%"
                         chart-id="green-line-chart"
                         :chart-data="greenLineChart.chartData"
@@ -451,7 +446,6 @@
   import StatChart from '@/components/StatChart.vue';
   import FinegrainedChart from '@/components/FinegrainedChart.vue';
   import FFTChart from '@/components/FFTChart.vue';
-
   import * as chartConfigs from '@/components/Charts/config';
   import TaskList from './Dashboard/TaskList';
   import UserTable from './Dashboard/UserTable';
@@ -479,6 +473,7 @@
         FineValue:[],
         FineValue2:[],
         fftSerial:[],
+        fftSeria2:[],
         fineValueLength:{
           default:4
         },
@@ -595,12 +590,6 @@
         }
         this.bigLineChart.activeIndex = index;
       },
-//与服务器端交互
-      doPost(url,data){
-            var val = document.getElementsByName("key1").value;
-            // var val2 = document.getElementsByName("key2").value;
-            $.post(url, {'key1':val});
-     },
 //展示设备1的统计学特征
       showData(option,index){
         console.log(this.maxSerial(this.$refs.mainRSSIChart1.store_data));//1
@@ -653,18 +642,52 @@
         this.fineValueLength2=this.FineValue.length;
 
       },
-      showFFT(option, index){
-       
-       
-        var fft = new this.$fft.complex(10, 0) //创建一个FFT对象
-        var fftSerial=[];
-        fft.simple(fftSerial, this.$refs.mainRSSIChart2.store_data, 'real')
-        console.log(fftSerial);
-        this.$refs.mainRSSIChart1.restoreStoreData();
-        this.$refs.mainRSSIChart2.restoreStoreData();
-        return fftSerial;
+//与服务器交互
+      doPost(url,data){
+        let datares=[];
+        var dataRet=[];
+        let dataform = new FormData();
+        dataform.append('code',data);
+        dataform.append('name','fft1');
+        this.$http.
+          post(url,dataform)
+            .then(response=>{
+              datares=response.data;
+              console.log(datares.data);
+              // console.log(datares.data[0]+'1');
+              for(let i=0; i<datares.data.length; i++){
+                //temdata[i]=parseFloat(datares.data[i]);
+                let data = parseFloat(datares.data[i]);
+                //console.log(data);
+                dataRet.push(data);
+                //console.log(this.fftSerial);
+                //console.log(this.fftSerial);
+              }
+              // console.log('hello1');
+              // console.log(this.fftSerial);
+              // console.log(temdata);
+            })
+            .catch(function(error){
+          })
+          return dataRet;
       },
+//展示设备1的FFT
+      showFFT(option, index){
+        var url="http://127.0.0.1:8000/users/device1";
+        var data=this.$refs.mainRSSIChart1.store_data;
+        this.fftSerial = this.doPost(url,data);
+        console.log(this.fftSerial)
+      },
+//展示设备2的FFT
+      // updateChartFFT(data)
+      // {
+      // },
+//展示设备2的FFT
       showFFT2(option, index){
+        var url="http://127.0.0.1:8000/users/device1";
+        var data=this.$refs.mainRSSIChart2.store_data;
+        this.fftSeria2 = this.doPost(url,data);
+        console.log(this.fftSeria2)
       },
       //计算序列的一些特征
       //1. 最大值

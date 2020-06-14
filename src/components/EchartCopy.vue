@@ -8,7 +8,7 @@
 <script>
 
 export default {
-    name: 'Echarts',
+    name: 'EchartCopy',
     props: {
         startFlag: {
                // type: Object,
