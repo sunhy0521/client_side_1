@@ -21,12 +21,12 @@ export default {
             //  default:'Device2',
         },
         series_data: {
-            default: [0, 0, 0, 0]
+            default: [0, 0, 0, 0, 0, 0, 0]
         }
     },
     data() {
       return {
-            x_data: ['Max', 'Min', 'Mean', 'GeoMean'],
+            x_data: ['Min', 'Max', 'Mean', 'Media','Entropy','STD','Variance'],
             store_data:[120, 200, 150, 80, 70, 110, 130],
             myChart: null,
             wsConnection: null
@@ -49,7 +49,12 @@ export default {
                     fontSize: 10
                     },
                     type: 'category',
-                    data: this.x_data
+                    data: this.x_data,
+                    axisLabel:{
+                        interval: 0,
+                        rotate:40,
+    	            }
+
                 },
                 yAxis: {
                     type:'log',
