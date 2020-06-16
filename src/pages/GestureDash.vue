@@ -68,11 +68,11 @@
               </div>
             </div>
           </template>
-          <div class="chart-area">
-            <MulChart ref="mulchart1"
+          <!-- <div class="chart-area"> -->
+            <!-- <MulChart ref="mulchart1"
                 style="height:100%">
-            </MulChart>
-          </div>
+            </MulChart> -->
+          <!-- </div> -->
         </card>
       </div>
     </div>
@@ -157,8 +157,8 @@
             </div>
           </template>
           <div class="chart-area">
-            <UpsamChart style="height:100%">
-            </UpsamChart>
+            <!-- <UpsamChart style="height:100%">
+            </UpsamChart> -->
           </div>
         </card>
       </div>
@@ -269,13 +269,14 @@
           </template>
           <div class="chart-area">
             <!-- Device 1 FFT展示 -->
-            <!-- <HeatmapFFT
-            style = "height:100%"
-            ref="HeatmapFFT1"
-            v-bind:xData="this.time"
-            v-bind:yData="this.freq"
+            <HeatmapFFT
+              style = "height:100%"
+              ref="HeatmapFFT1"
+              v-bind:xData="this.time"
+              v-bind:yData="this.freq"
+              v-bind:data="this.mag"
             >
-            </HeatmapFFT> -->
+            </HeatmapFFT>
           </div>
         </card>
       </div>
@@ -511,6 +512,12 @@
         freq:[],
         time:[],
         mag:[],
+        magmax:{
+          default:0
+        },
+        magmin:{
+          default:0
+        },
         fineValueLength:{
           default:4
         },
@@ -526,24 +533,6 @@
           default: false
         },
         bigLineChart: {
-          // allData: [
-          //   [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-          //   [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-          //   [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-          // ],
-          activeIndex: 0,
-          chartData: null,
-          extraOptions: chartConfigs.purpleChartOptions,
-          gradientColors: config.colors.primaryGradient,
-          gradientStops: [1, 0.4, 0],
-          categories: []
-        },
-        bigLineChart: {
-          // allData: [
-          //   [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-          //   [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-          //   [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-          // ],
           activeIndex: 0,
           chartData: null,
           extraOptions: chartConfigs.purpleChartOptions,
@@ -552,11 +541,6 @@
           categories: []
         },
         bigLineChart1: {
-          // allData: [
-          //   [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-          //   [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-          //   [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-          // ],
           activeIndex: 0,
           chartData: null,
           extraOptions: chartConfigs.purpleChartOptions,
@@ -630,42 +614,69 @@
       //与服务器交互获取多为数组
       doPostArray(url,data){
         let datares=[];
+        var datatest=[];
         var dataRetfreq=[];
         var dataRettime=[];
-        var dataRetmag=[[]];
+        var vector=[];
+        var dataRetmag=[];
         let dataform = new FormData();
         dataform.append('code',data);
         dataform.append('name','fft1');
+      //   this.$http.
+      //     post(url,dataform)
+      //       .then(response=>{
+      //         datares=response.data;
+      //         datatest=datares.mag;
+      //         for(let i=0; i<datares.freq.length; i++){
+      //           let freq = parseFloat(datares.freq[i]);
+      //           dataRetfreq.push(freq); 
+      //         }
+      //         for(let i=0; i<datares.time.length;i++){
+      //           let time = parseFloat(datares.time[i]);
+      //           dataRettime.push(time);
+      //         }
+      //         for(let i=0; i<datares.mag.length;i++){
+      //           let mag = parseFloat(datares.mag[i]);
+      //           dataRetmag.push(mag);
+      //         }
+      //       })
+      //       .catch(function(error){
+      //     })
+      //     console.log('http');
+      //     console.log(dataRetmag);
+      //     return {
+      //       freq:dataRetfreq,
+      //       time:dataRettime,
+      //       mag: dataRetmag
+      //     }
+      // },
         this.$http.
           post(url,dataform)
             .then(response=>{
               datares=response.data;
-              for(let i=0; i<datares.freq.length; i++){
-                let freq = parseFloat(datares.freq[i]);
-                dataRetfreq.push(freq); 
+              //console.log(datares);
+              //console.log(datares.freq);
+              //console.log(datares.time);
+              //let resp_mag=datares.mag;
+              this.freq=datares.freq;
+              this.time= datares.time;
+              this.magmax = datares.magmax;
+              this.magmin = datares.magmin;
+              console.log('dataRetMag:');
+              
+              for (var i = 0; i < datares.mag.length; i++) {
+                  for (var j = 0; j < datares.mag[i].length; j++) {
+                      this.mag.push([i, j, datares.mag[i][j]]);
+                  }
+                  // xData.push(i);
               }
-              for(let i=0; i<datares.time.length;i++){
-                let time = parseFloat(datares.time[i]);
-                dataRettime.push(time);
-              }
-              dataRetmag = datares.mag;
-
-              for(let i=0; i<datares.mag.length;i++){
-                for(let j=0; j<datares.mag[i],length; j++){
-                  let magdata = parseFloat(datares.mag[i][j]);
-                  dataRetmag[i].push(magdata);
-                }
-              }
+              console.log(this.mag);
+              this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
             })
             .catch(function(error){
           })
-          return {
-            freq:dataRetfreq,
-            time:dataRettime,
-            magnitude:dataRetmag
-          }
+          //console.log("test1");
       },
-
 //展示设备1的统计学特征
       showData(option,index){
         var url="http://127.0.0.1:8000/users/parameters";
@@ -707,11 +718,20 @@
         //STFT DATA 
       var url="http://127.0.0.1:8000/users/fftonline";
       var data=this.$refs.mainRSSIChart1.store_data;  
-      console.log('before post');
-      var obj = this.doPostArray(url,data);
+      //var obj = this.doPostArray(url,data);
+      this.doPostArray(url,data);
+      //this.freq=obj.freq;
+      //this.time=obj.time;
+      // for(let i=0;i<obj.freq.length;i++){
+      //   for(let j=0;j<obj.time.length; j++){
+      //     this.mag[i,j]=obj.mag[i*obj.time.length+j];
+      //   }
+      // }
+
       console.log('hello SHOWfft');
-      console.log(obj.freq);
-      console.log(obj.time);
+      console.log(this.freq);
+      console.log(this.time);
+      console.log(this.mag);
         //简单FFT
         // var url="http://127.0.0.1:8000/users/device1";
         // var data=this.$refs.mainRSSIChart1.store_data;
@@ -729,70 +749,6 @@
         this.fftSeria2 = this.doPost(url,data);
         console.log(this.fftSeria2)
       },
-      //计算序列的一些特征
-      //1. 最大值
-      // maxSerial(erialData){
-      //     return this.$jstat.max(erialData);
-      // },
-      // //2. 最小值
-      // minSerial(erialData){
-      //     return this.$jstat.min(erialData);
-      // },
-      // //3. 平均值
-      // averSerial(erialData){
-      //   return this.$jstat.mean(erialData);
-      // },
-      // //4.平方误差
-      // sumSqeErro(erialData){
-      //   return this.$jstat.sumsqerr(erialData); 
-      // },
-      // //5.平方和
-      // SumSquare(erialData){
-      //     return this.$jstat.sumsqrd(erialData);
-      // },
-      // //6.  几何平均值
-      // Geomean(erialData){
-      //   return this.$jstat.geomean(erialData)
-      // },
-      // //7. 方差
-      // varianceInfo(erialData){
-      //   return this.$jstat.variance(erialData)
-      // },
-
-      // fineGrainedPower(erialData){
-      //   for(var i=0;i<erialData.length;i++){
-      //     erialData[i] =10**(erialData[i]/10);
-      //   }
-      //   return erialData;
-      //   // return erialData.length;
-      //   // 10**(erialData/10);
-      // },
-
-      // RSS_power = 10.^((training_data(:,2:y)/10));
-    
-      initBigChart(index, option) {
-        let chartData = {
-          datasets: [{
-            fill: true,
-            borderColor: config.colors.primary,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: config.colors.primary,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: config.colors.primary,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: this.bigLineChart.allData[index]
-          }],
-          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-        }
-
-        this.bigLineChart.chartData = chartData;
-        this.bigLineChart.activeIndex = index;
-      }
     },
     mounted() {
       this.i18n = this.$i18n;

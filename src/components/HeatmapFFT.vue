@@ -11,21 +11,21 @@ export default {
     props: {
         lengthSerial:{
             default: 4
-        },
-        data:{
-            default: []
-        },
-        xData:{
-            default:[]
-        },
-        yData:{
-            default:[]
         }
     },
     data() {
       return {
             myChart: null,
-            wsConnection: null
+            wsConnection: null,
+            xData:{
+                default:[]
+            },
+            yData:{
+                default:[]
+            },
+            data:{
+                default:[]
+            },
       }
     },
     methods:{
@@ -45,16 +45,14 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    data: xData
+                    data: this.xData
                 },
                 yAxis: {
                     type: 'category',
-                    data: yData
+                    data: this.yData
                 },
                 visualMap: {
-                    type: 'piecewise',
-                    min: 0,
-                    max: 1,
+                    //type: 'piecewise',
                     calculable: true,
                     realtime: false,
                     splitNumber: 8,
@@ -65,7 +63,7 @@ export default {
                 series: [{
                     name: 'Gaussian',
                     type: 'heatmap',
-                    data: data,
+                    data: this.data,
                     emphasis: {
                         itemStyle: {
                             borderColor: '#333',
@@ -80,6 +78,31 @@ export default {
             this.myChart.setOption(option);
             this.myChart.resize();    
        },
+        updateEchart(xdata,ydata,data_mag,max,min)
+        {
+            var option_mag = {
+                xAxis: {
+                    type: 'category',
+                    data: xdata
+                },
+                yAxis: {
+                    type: 'category',
+                    data: ydata
+                },
+                visualMap:{
+                    min: min,
+                    max: max,
+                },
+                series: [{
+                    name: 'Gaussian',
+                    type: 'heatmap',
+                    data: data_mag
+                }]
+            }
+            this.myChart.setOption(option_mag);
+            console.log("update:");
+            console.log(option_mag);
+        }
     },
     mounted() {
         this.myEcharts();
