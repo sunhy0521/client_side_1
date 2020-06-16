@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-5">
+      <div class="col-6">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -39,7 +39,7 @@
             </div>
         </card>
       </div>
-      <div class="col-1">
+      <!-- <div class="col-1">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -51,13 +51,8 @@
           </template>
           <DynamicChart>
           </DynamicChart>
-          <!-- <div class="chart-area">
-            <DynamicChart>
-            
-            </DynamicChart>
-          </div> -->
         </card>
-      </div>
+      </div> -->
       <div class="col-6">
         <card type="chart">
           <template slot="header">
@@ -68,16 +63,16 @@
               </div>
             </div>
           </template>
-          <!-- <div class="chart-area"> -->
-            <!-- <MulChart ref="mulchart1"
+          <div class="chart-area">
+            <MulChart ref="mulchart1"
                 style="height:100%">
-            </MulChart> -->
-          <!-- </div> -->
+            </MulChart>
+          </div>
         </card>
       </div>
     </div>
     <div class="row">
-      <div class="col-5">
+      <div class="col-6">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -115,7 +110,7 @@
             </div>
         </card>
       </div>
-      <div class="col-1">
+      <!-- <div class="col-1">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -123,29 +118,12 @@
                 <h5 class="card-category">预测结果</h5>
                 <h2 class="card-title">Go</h2>
               </div>
-              <!-- <div class="col-sm-6">
-                <div class="btn-group btn-group-toggle"
-                     :class="isRTL ? 'float-left' : 'float-right'"
-                     data-toggle="buttons">
-                  <label v-for="(option, index) in bigLineChartCategories"
-                         :key="option"
-                         class="btn btn-sm btn-primary btn-simple"
-                         :class="{active: bigLineChart.activeIndex === index}"
-                         :id="index">
-                    <input type="radio"
-                           @click="mainRSSIControl(option,index)"
-                           name="options" autocomplete="off"
-                           :checked="bigLineChart.activeIndex === index">
-                    {{option}}
-                  </label>
-                </div>
-              </div> -->
             </div>
           </template>
           <div class="chart-area">
           </div>
         </card>
-      </div>
+      </div> -->
       <div class="col-6">
         <card type="chart">
           <template slot="header">
@@ -157,8 +135,8 @@
             </div>
           </template>
           <div class="chart-area">
-            <!-- <UpsamChart style="height:100%">
-            </UpsamChart> -->
+            <UpsamChart style="height:100%">
+            </UpsamChart>
           </div>
         </card>
       </div>
@@ -426,12 +404,14 @@
             </div>
           </template>
           <div class="chart-area">
-            <FFTChart 
-            style="height: 100%"
-            ref="FFTChart2"
-            v-bind:series_data="this.fftSeria2"
+            <HeatmapFFT
+              style = "height:100%"
+              ref="HeatmapFFT2"
+              v-bind:xData="this.time"
+              v-bind:yData="this.freq"
+              v-bind:data="this.mag"
             >
-            </FFTChart>
+            </HeatmapFFT>
           </div>
         </card>
       </div>
@@ -614,10 +594,8 @@
       //与服务器交互获取多为数组
       doPostArray(url,data){
         let datares=[];
-        var datatest=[];
         var dataRetfreq=[];
         var dataRettime=[];
-        var vector=[];
         var dataRetmag=[];
         let dataform = new FormData();
         dataform.append('code',data);
@@ -627,19 +605,47 @@
             .then(response=>{
               datares=response.data;
               this.freq=datares.freq;
-              this.time= datares.time;
+              this.time=datares.time;
               this.magmax = datares.max;
               this.magmin = datares.min;
-              console.log('dataRetMag:');
+              
+              // console.log('dataRetMag:');
               for (var i = 0; i < datares.mag.length; i++) {
                   for (var j = 0; j < datares.mag[i].length; j++) {
                       this.mag.push([i, j, datares.mag[i][j]]);
                   }
               }
-              console.log(this.mag);
-              console.log(this.magmax);
-              console.log(this.magmin);
-              // this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
+              this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
+            })
+            .catch(function(error){
+          })
+          //console.log("test1");
+      },
+
+      doPostArray1(url,data){
+        let datares=[];
+        var dataRetfreq=[];
+        var dataRettime=[];
+        var dataRetmag=[];
+        let dataform = new FormData();
+        dataform.append('code',data);
+        dataform.append('name','fft1');
+        this.$http.
+          post(url,dataform)
+            .then(response=>{
+              datares=response.data;
+              this.freq=datares.freq;
+              this.time=datares.time;
+              this.magmax = datares.max;
+              this.magmin = datares.min;
+              
+              // console.log('dataRetMag:');
+              for (var i = 0; i < datares.mag.length; i++) {
+                  for (var j = 0; j < datares.mag[i].length; j++) {
+                      this.mag.push([i, j, datares.mag[i][j]]);
+                  }
+              }
+              this.$refs.HeatmapFFT2.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
             })
             .catch(function(error){
           })
@@ -686,18 +692,14 @@
         var url="http://127.0.0.1:8000/users/fftonline";
         var data=this.$refs.mainRSSIChart1.store_data;  
         this.doPostArray(url,data);
-        // console.log('hello SHOWfft');
-        // console.log(this.freq);
-        // console.log(this.time);
-        // console.log(this.mag);
-        this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
+        
       },
 
 //展示设备2的FFT
       showFFT2(option, index){
         var url="http://127.0.0.1:8000/users/fftonline";
         var data=this.$refs.mainRSSIChart2.store_data;  
-        this.doPostArray(url,data);
+        this.doPostArray1(url,data);
         // this.fftSeria2 = this.doPost(url,data);
         // console.log(this.fftSeria2)
       },
