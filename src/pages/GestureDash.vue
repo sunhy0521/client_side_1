@@ -622,56 +622,24 @@
         let dataform = new FormData();
         dataform.append('code',data);
         dataform.append('name','fft1');
-      //   this.$http.
-      //     post(url,dataform)
-      //       .then(response=>{
-      //         datares=response.data;
-      //         datatest=datares.mag;
-      //         for(let i=0; i<datares.freq.length; i++){
-      //           let freq = parseFloat(datares.freq[i]);
-      //           dataRetfreq.push(freq); 
-      //         }
-      //         for(let i=0; i<datares.time.length;i++){
-      //           let time = parseFloat(datares.time[i]);
-      //           dataRettime.push(time);
-      //         }
-      //         for(let i=0; i<datares.mag.length;i++){
-      //           let mag = parseFloat(datares.mag[i]);
-      //           dataRetmag.push(mag);
-      //         }
-      //       })
-      //       .catch(function(error){
-      //     })
-      //     console.log('http');
-      //     console.log(dataRetmag);
-      //     return {
-      //       freq:dataRetfreq,
-      //       time:dataRettime,
-      //       mag: dataRetmag
-      //     }
-      // },
         this.$http.
           post(url,dataform)
             .then(response=>{
               datares=response.data;
-              //console.log(datares);
-              //console.log(datares.freq);
-              //console.log(datares.time);
-              //let resp_mag=datares.mag;
               this.freq=datares.freq;
               this.time= datares.time;
-              this.magmax = datares.magmax;
-              this.magmin = datares.magmin;
+              this.magmax = datares.max;
+              this.magmin = datares.min;
               console.log('dataRetMag:');
-              
               for (var i = 0; i < datares.mag.length; i++) {
                   for (var j = 0; j < datares.mag[i].length; j++) {
                       this.mag.push([i, j, datares.mag[i][j]]);
                   }
-                  // xData.push(i);
               }
               console.log(this.mag);
-              this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
+              console.log(this.magmax);
+              console.log(this.magmin);
+              // this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
             })
             .catch(function(error){
           })
@@ -715,39 +683,23 @@
 
 //展示设备1的FFT
       showFFT(option, index){
-        //STFT DATA 
-      var url="http://127.0.0.1:8000/users/fftonline";
-      var data=this.$refs.mainRSSIChart1.store_data;  
-      //var obj = this.doPostArray(url,data);
-      this.doPostArray(url,data);
-      //this.freq=obj.freq;
-      //this.time=obj.time;
-      // for(let i=0;i<obj.freq.length;i++){
-      //   for(let j=0;j<obj.time.length; j++){
-      //     this.mag[i,j]=obj.mag[i*obj.time.length+j];
-      //   }
-      // }
-
-      console.log('hello SHOWfft');
-      console.log(this.freq);
-      console.log(this.time);
-      console.log(this.mag);
-        //简单FFT
-        // var url="http://127.0.0.1:8000/users/device1";
-        // var data=this.$refs.mainRSSIChart1.store_data;
-        // this.fftSerial = this.doPost(url,data);
-        // console.log(this.fftSerial)
+        var url="http://127.0.0.1:8000/users/fftonline";
+        var data=this.$refs.mainRSSIChart1.store_data;  
+        this.doPostArray(url,data);
+        // console.log('hello SHOWfft');
+        // console.log(this.freq);
+        // console.log(this.time);
+        // console.log(this.mag);
+        this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
       },
-//展示设备2的FFT
-      // updateChartFFT(data)
-      // {
-      // },
+
 //展示设备2的FFT
       showFFT2(option, index){
-        var url="http://127.0.0.1:8000/users/device1";
-        var data=this.$refs.mainRSSIChart2.store_data;
-        this.fftSeria2 = this.doPost(url,data);
-        console.log(this.fftSeria2)
+        var url="http://127.0.0.1:8000/users/fftonline";
+        var data=this.$refs.mainRSSIChart2.store_data;  
+        this.doPostArray(url,data);
+        // this.fftSeria2 = this.doPost(url,data);
+        // console.log(this.fftSeria2)
       },
     },
     mounted() {

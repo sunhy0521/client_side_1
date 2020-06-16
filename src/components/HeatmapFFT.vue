@@ -51,15 +51,6 @@ export default {
                     type: 'category',
                     data: this.yData
                 },
-                visualMap: {
-                    //type: 'piecewise',
-                    calculable: true,
-                    realtime: false,
-                    splitNumber: 8,
-                    inRange: {
-                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
-                    }
-                },
                 series: [{
                     name: 'Gaussian',
                     type: 'heatmap',
@@ -92,6 +83,12 @@ export default {
                 visualMap:{
                     min: min,
                     max: max,
+                    calculable: true,
+                    realtime: false,
+                    splitNumber: 8,
+                    inRange: {
+                        color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+                    }
                 },
                 series: [{
                     name: 'Gaussian',
