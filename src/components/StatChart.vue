@@ -26,8 +26,8 @@ export default {
     },
     data() {
       return {
-            x_data: ['Min', 'Max', 'Mean', 'Media','Entropy','STD','Variance'],
-            store_data:[120, 200, 150, 80, 70, 110, 130],
+            x_data: ['Min', 'Max', 'Mean', 'Media','Entropy','STD'],
+            store_data:[120, 200, 150, 80, 70, 110],
             myChart: null,
             wsConnection: null
       }

@@ -1,12 +1,52 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-9">
+      <div class="col-6">
         <card type="chart">
           <template slot="header">
             <div class="row">
               <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
-                <!-- <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5> -->
+                <h5 class="card-category">在线动作分析</h5>
+                <h2 class="card-title">{{$t('dashboard.performance')}}</h2>
+              </div>
+              <div class="col-sm-6">
+                <div class="btn-group btn-group-toggle"
+                     :class="isRTL ? 'float-left' : 'float-right'"
+                     data-toggle="buttons">
+                  <label v-for="(option, index) in bigLineChartCategories"
+                         :key="option"
+                         class="btn btn-sm btn-primary btn-simple"
+                         :class="{active: bigLineChart1.activeIndex === index}"
+                         :id="index">
+                    <input type="radio"
+                           @click="mainRSSIControl(option,index)"
+                           name="options" autocomplete="off"
+                           :checked="bigLineChart1.activeIndex === index">
+                    {{option}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </template>
+            <div class="chart-area">
+              <Echarts ref="mainRSSIChart"
+                style="height:100%"
+                titleText="Device 1"
+                dataUrl="ws://localhost:8000/wsapi/api/device1/"
+                v-bind:startFlag="mainChartStartFlag"
+              >
+              </Echarts>
+            </div>
+        </card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <card type="chart">
+          <template slot="header">
+            <div class="row">
+              <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
+                <h5 class="card-category">在线动作分析</h5>
                 <h2 class="card-title">{{$t('dashboard.performance')}}</h2>
               </div>
               <div class="col-sm-6">
@@ -19,7 +59,7 @@
                          :class="{active: bigLineChart.activeIndex === index}"
                          :id="index">
                     <input type="radio"
-                           @click="mainRSSIControl(option,index)"
+                           @click="mainRSSIControl1(option,index)"
                            name="options" autocomplete="off"
                            :checked="bigLineChart.activeIndex === index">
                     {{option}}
@@ -29,75 +69,19 @@
             </div>
           </template>
             <div class="chart-area">
-              <Echarts ref="mainRSSIChart1"
+              <EchartCopy ref="mainRSSIChart1"
                 style="height:100%"
-                titleText="Device 1"
-                dataUrl="ws://localhost:8000/wsapi/api/device1/"
-                v-bind:startFlag="mainChartStartFlag"
+                titleText="Device 2"
+                dataUrl="ws://localhost:8000/wsapi/api/device2/"
+                v-bind:startFlag="mainChartStartFlag1"
               >
-              </Echarts>
+              </EchartCopy>
             </div>
-          <div class="chart-area">
-            <Echarts ref="mainRSSIChart2"
-              style="height:100%"
-              titleText="Device 2"
-              dataUrl="ws://localhost:8000/wsapi/api/device2/"
-              v-bind:startFlag="mainChartStartFlag"
-            >
-            </Echarts>
-          </div>
-        </card>
-      </div>
-      <div class="col-3">
-        <card type="chart">
-          <template slot="header">
-            <div class="row">
-              <div class="col-sm-6" :class="isRTL ? 'text-right' : 'text-left'">
-                <h5 class="card-category">{{$t('dashboard.totalShipments')}}</h5>
-                <h2 class="card-title">{{$t('dashboard.cameraMonitoring')}}</h2>
-              </div>
-              <div class="col-sm-6">
-                <div class="btn-group btn-group-toggle"
-                     :class="isRTL ? 'float-left' : 'float-right'"
-                     data-toggle="buttons">
-                  <label v-for="(option, index) in bigLineChartCategories"
-                         :key="option"
-                         class="btn btn-sm btn-primary btn-simple"
-                         :class="{active: bigLineChart.activeIndex === index}"
-                         :id="index">
-                    <input type="radio"
-                           @click="mainRSSIControl(option,index)"
-                           name="options" autocomplete="off"
-                           :checked="bigLineChart.activeIndex === index">
-                    {{option}}
-                  </label>
-                </div>
-              </div>
-            </div>
-          </template>
-          <div class="chart-area">
-            <!-- <Echarts ref="mainRSSIChart1"
-              style="height:100%"
-              title="RSSI1"
-              dataUrl="http://127.0.0.1:8000/users/device1"
-              v-bind:startFlag="mainChartStartFlag"
-            >
-            </Echarts> -->
-          </div>
-          <div class="chart-area">
-            <!-- <Echarts ref="mainRSSIChart1"
-              style="height:100%"
-              title="RSSI1"
-              dataUrl="http://127.0.0.1:8000/users/device1"
-              v-bind:startFlag="mainChartStartFlag"
-            >
-            </Echarts> -->
-          </div>
         </card>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
+      <div class="col-lg-2" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -134,7 +118,7 @@
             </div>  
         </card>
       </div>
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
+      <div class="col-lg-2" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -172,7 +156,7 @@
           </div>
         </card>
       </div>
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
+      <div class="col-lg-2" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -202,56 +186,21 @@
           </template>
           <div class="chart-area">
             <!-- Device 1 FFT展示 -->
-            <FFTChart 
-            style="height: 100%"
-            ref="FFTChart1"
-            v-bind:series_data="this.fftSerial"
+            <HeatmapFFT
+              style = "height:100%"
+              ref="HeatmapFFT1"
+              v-bind:xData="this.time"
+              v-bind:yData="this.freq"
+              v-bind:data="this.mag"
             >
-            </FFTChart>
+            </HeatmapFFT>
           </div>
         </card>
       </div>
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
-        <card type="chart">
-          <template slot="header">
-            <div class="row">
-              <div class="col-sm-6">
-                <h2 class="card-category">Device 1</h2>
-                <h3 class="card-title">预测结果</h3>
-              </div>
-              <div class="col-sm-6">
-                 <h2 class="card-category">Results</h2>
-                  <div class="btn-group btn-group-toggle"
-                     :class="isRTL ? 'float-left' : 'float-right'"
-                     data-toggle="buttons">
-                  <label v-for="(option, index) in commFeatureCategories"
-                         :key="option"
-                         class="btn btn-sm btn-primary btn-simple"
-                         :class="{active: bigLineChart.activeIndex === index}"
-                         :id="index">
-                    <input type="radio"
-                           @click="mainRSSIControl(option,index)"
-                           name="options" autocomplete="off"
-                           :checked="bigLineChart.activeIndex === index">
-                    {{option}}
-                  </label>
-                </div>
-              </div>
-            </div>
-          </template>
-          <div class="chart-area">
-            <!-- <line-chart style="height: 100%"
-                        chart-id="green-line-chart"
-                        :chart-data="greenLineChart.chartData"
-                        :gradient-stops="greenLineChart.gradientStops"
-                        :extra-options="greenLineChart.extraOptions">
-            </line-chart> -->
-          </div>
-        </card>
-      </div>
+
     </div>
     <div class="row">
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
+      <div class="col-lg-2" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -288,7 +237,7 @@
             </div>  
         </card>
       </div>
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
+      <div class="col-lg-2" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -327,7 +276,7 @@
           </div>
         </card>
       </div>
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
+      <div class="col-lg-2" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <div class="row">
@@ -356,96 +305,33 @@
             </div>
           </template>
           <div class="chart-area">
-            <FFTChart 
-            style="height: 100%"
-            ref="FFTChart2"
-            v-bind:series_data="this.fftSeria2"
+            <HeatmapFFT
+              style = "height:100%"
+              ref="HeatmapFFT2"
+              v-bind:xData="this.time"
+              v-bind:yData="this.freq"
+              v-bind:data="this.mag"
             >
-            </FFTChart>
-          </div>
-        </card>
-      </div>
-      <div class="col-lg-3" :class="{'text-right': isRTL}">
-        <card type="chart">
-          <template slot="header">
-            <div class="row">
-              <div class="col-sm-6">
-                <h2 class="card-category">Device 2</h2>
-                <h3 class="card-title">预测结果</h3>
-              </div>
-              <div class="col-sm-6">
-                 <h2 class="card-category">Results</h2>
-                  <div class="btn-group btn-group-toggle"
-                     :class="isRTL ? 'float-left' : 'float-right'"
-                     data-toggle="buttons">
-                  <label v-for="(option, index) in commFeatureCategories"
-                         :key="option"
-                         class="btn btn-sm btn-primary btn-simple"
-                         :class="{active: bigLineChart.activeIndex === index}"
-                         :id="index">
-                    <input type="radio"
-                           @click="showFFT2(option,index)"
-                           name="options" autocomplete="off"
-                           :checked="bigLineChart.activeIndex === index">
-                    {{option}}
-                  </label>
-                </div>
-              </div>
-            </div>
-          </template>
-          <div class="chart-area">
-            <!-- <h4>Contiki</h4>
-            <h4>SmartRF</h4> -->
-            <!-- <line-chart style="height: 100%"
-                        chart-id="green-line-chart"
-                        :chart-data="greenLineChart.chartData"
-                        :gradient-stops="greenLineChart.gradientStops"
-                        :extra-options="greenLineChart.extraOptions">
-            </line-chart> -->
+            </HeatmapFFT>
           </div>
         </card>
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="col-lg-6 col-md-12">
-        <card type="tasks" :header-classes="{'text-right': isRTL}">
-          <template slot="header">
-            <h6 class="title d-inline">{{$t('dashboard.tasks', {count: 5})}}</h6>
-            <p class="card-category d-inline">{{$t('dashboard.today')}}</p>
-            <base-dropdown menu-on-right=""
-                           tag="div"
-                           title-classes="btn btn-link btn-icon"
-                           aria-label="Settings menu"
-                           :class="{'float-left': isRTL}">
-              <i slot="title" class="tim-icons icon-settings-gear-63"></i>
-              <a class="dropdown-item" href="#pablo">{{$t('dashboard.dropdown.action')}}</a>
-              <a class="dropdown-item" href="#pablo">{{$t('dashboard.dropdown.anotherAction')}}</a>
-              <a class="dropdown-item" href="#pablo">{{$t('dashboard.dropdown.somethingElse')}}</a>
-            </base-dropdown>
-          </template>
-          <div class="table-full-width table-responsive">
-            <task-list></task-list>
-          </div>
-        </card>
-      </div>
-      <div class="col-lg-6 col-md-12">
-        <card class="card" :header-classes="{'text-right': isRTL}">
-          <h4 slot="header" class="card-title">{{$t('dashboard.simpleTable')}}</h4>
-          <div class="table-responsive">
-            <user-table></user-table>
-          </div>
-        </card>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
   import LineChart from '@/components/Charts/LineChart';
   import BarChart from '@/components/Charts/BarChart';
   import Echarts from '@/components/Echarts';
+  import EchartCopy from '@/components/EchartCopy';
   import StatChart from '@/components/StatChart.vue';
   import FinegrainedChart from '@/components/FinegrainedChart.vue';
   import FFTChart from '@/components/FFTChart.vue';
+  import MulChart from '@/components/MulChart.vue';
+  import UpsamChart from '@/components/UpsamChart.vue';
+  import DynamicChart from '@/components/DynamicChart.vue';
+  import HeatmapFFT from '@/components/HeatmapFFT.vue';
+  // import ResPic from '@/components/ResPic.vue';
   import * as chartConfigs from '@/components/Charts/config';
   import TaskList from './Dashboard/TaskList';
   import UserTable from './Dashboard/UserTable';
@@ -461,7 +347,13 @@
       Echarts,
       StatChart,
       FinegrainedChart,
-      FFTChart
+      FFTChart,
+      MulChart,
+      UpsamChart,
+      EchartCopy,
+      DynamicChart,
+      HeatmapFFT
+      // ResPic
     },
     props: {
     },
@@ -474,6 +366,15 @@
         FineValue2:[],
         fftSerial:[],
         fftSeria2:[],
+        freq:[],
+        time:[],
+        mag:[],
+        magmax:{
+          default:0
+        },
+        magmin:{
+          default:0
+        },
         fineValueLength:{
           default:4
         },
@@ -484,12 +385,11 @@
           type: Boolean,
           default: false
         },
+        mainChartStartFlag1:{
+          type: Boolean,
+          default: false
+        },
         bigLineChart: {
-          // allData: [
-          //   [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100],
-          //   [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120],
-          //   [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-          // ],
           activeIndex: 0,
           chartData: null,
           extraOptions: chartConfigs.purpleChartOptions,
@@ -497,71 +397,14 @@
           gradientStops: [1, 0.4, 0],
           categories: []
         },
-        purpleLineChart: {
+        bigLineChart1: {
+          activeIndex: 0,
+          chartData: null,
           extraOptions: chartConfigs.purpleChartOptions,
-          chartData: {
-            labels: ['平均值', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-            datasets: [{
-              label: "Data",
-              fill: true,
-              borderColor: config.colors.primary,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.primary,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.primary,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [this.maxValue, 100, 70, 80, 120, 80],
-            }]
-          },
-          gradientColors: config.colors.primaryGradient,
-          gradientStops: [1, 0.2, 0],
-        },
-        greenLineChart: {
-          extraOptions: chartConfigs.greenChartOptions,
-          chartData: {
-            labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
-            datasets: [{
-              label: "My First dataset",
-              fill: true,
-              borderColor: config.colors.danger,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.danger,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.danger,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [this.maxValue, 27, 60, 12, 80],
-            }]
-          },
-          gradientColors: ['rgba(66,134,121,0.15)', 'rgba(66,134,121,0.0)', 'rgba(66,134,121,0)'],
-          gradientStops: [1, 0.4, 0],
-        },
-        blueBarChart: {
-          extraOptions: chartConfigs.barChartOptions,
-          chartData: {
-            labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
-            datasets: [{
-              label: "Countries",
-              fill: true,
-              borderColor: config.colors.info,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              data: [53, 20, 10, 80, 100, 45],
-            }]
-          },
           gradientColors: config.colors.primaryGradient,
           gradientStops: [1, 0.4, 0],
-        }
+          categories: []
+        },
       }
     },
     computed: {
@@ -582,67 +425,27 @@
       mainRSSIControl(option,index){
         if(index==0)
         {
-          this.mainChartStartFlag =false;
+          this. mainChartStartFlag =false;
         }
         else
         {
-          this.mainChartStartFlag =true;
+          this. mainChartStartFlag =true;
         }
         this.bigLineChart.activeIndex = index;
       },
-//展示设备1的统计学特征
-      showData(option,index){
-        console.log(this.maxSerial(this.$refs.mainRSSIChart1.store_data));//1
-        console.log(this.minSerial(this.$refs.mainRSSIChart1.store_data));//2
-        console.log(this.averSerial(this.$refs.mainRSSIChart1.store_data));//3
-        // console.log(this.sumSqeErro(this.$refs.mainRSSIChart1.store_data));//4
-        // console.log(this.SumSquare(this.$refs.mainRSSIChart1.store_data));//5
-        console.log(this.Geomean(this.$refs.mainRSSIChart1.store_data));//6
-        // console.log(this.varianceInfo(this.$refs.mainRSSIChart1.store_data));//7
-
-        this.StatValue[0]=this.maxSerial(this.$refs.mainRSSIChart1.store_data);//1
-        this.StatValue[1]=this.minSerial(this.$refs.mainRSSIChart1.store_data);//2
-        this.StatValue[2]=this.averSerial(this.$refs.mainRSSIChart1.store_data);//3
-        this.StatValue[3]=this.Geomean(this.$refs.mainRSSIChart1.store_data);//6
-        this.$refs.statChart1.myEcharts();
-
+      mainRSSIControl1(option,index){
+        if(index==0)
+        {
+          this.mainChartStartFlag1 =false;
+        }
+        else
+        {
+          this.mainChartStartFlag1 =true;
+        }
+        this.bigLineChart.activeIndex = index;
       },
-//展示设备2的统计学特征
-      showDataDevice(option,index){
-        console.log(this.maxSerial(this.$refs.mainRSSIChart2.store_data));//1
-        console.log(this.minSerial(this.$refs.mainRSSIChart2.store_data));//2
-        console.log(this.averSerial(this.$refs.mainRSSIChart2.store_data));//3
-        // console.log(this.sumSqeErro(this.$refs.mainRSSIChart2.store_data));//4
-        // console.log(this.SumSquare(this.$refs.mainRSSIChart2.store_data));//5
-        console.log(this.Geomean(this.$refs.mainRSSIChart2.store_data));//6
-        // console.log(this.fineGrainedPower(this.$refs.mainRSSIChart2.store_data));
-        // console.log(this.varianceInfo(this.$refs.mainRSSIChart2.store_data));//7
 
-        this.StatValue2[0]=this.maxSerial(this.$refs.mainRSSIChart2.store_data);//1
-        this.StatValue2[1]=this.minSerial(this.$refs.mainRSSIChart2.store_data);//2
-        this.StatValue2[2]=this.averSerial(this.$refs.mainRSSIChart2.store_data);//3
-        this.StatValue2[3]=this.Geomean(this.$refs.mainRSSIChart2.store_data);//6
-        this.$refs.statChart2.myEcharts();
-      },
-//显示设备1的时序细粒度特征
-      showFineTimeData(option,index){
-        console.log(this.fineGrainedPower(this.$refs.mainRSSIChart1.store_data));
-        // console.log(this.)
-        this.FineValue=this.fineGrainedPower(this.$refs.mainRSSIChart1.store_data);
-        this.fineValueLength=this.FineValue.length;
-        // this.$refs.mainRSSIChart1.restoreStoreData();
-        // this.$refs.mainRSSIChart2.restoreStoreData();
-        // console.log(this.FineValue.length)
-      },
-//显示设备2的时序细粒度特征
-      showFineTimeData1(option, index){
-        console.log(this.fineGrainedPower(this.$refs.mainRSSIChart2.store_data));
-        // console.log(this.)
-        this.FineValue2=this.fineGrainedPower(this.$refs.mainRSSIChart2.store_data);
-        this.fineValueLength2=this.FineValue.length;
-
-      },
-//与服务器交互
+      //与服务器交互
       doPost(url,data){
         let datares=[];
         var dataRet=[];
@@ -653,106 +456,130 @@
           post(url,dataform)
             .then(response=>{
               datares=response.data;
-              console.log(datares.data);
-              // console.log(datares.data[0]+'1');
               for(let i=0; i<datares.data.length; i++){
-                //temdata[i]=parseFloat(datares.data[i]);
                 let data = parseFloat(datares.data[i]);
-                //console.log(data);
                 dataRet.push(data);
-                //console.log(this.fftSerial);
-                //console.log(this.fftSerial);
               }
-              // console.log('hello1');
-              // console.log(this.fftSerial);
-              // console.log(temdata);
             })
             .catch(function(error){
           })
+          console.log('dataRet Value');
+          console.log(dataRet);
           return dataRet;
       },
+
+      //与服务器交互获取多为数组
+      doPostArray(url,data){
+        let datares=[];
+        var dataRetfreq=[];
+        var dataRettime=[];
+        var dataRetmag=[];
+        let dataform = new FormData();
+        dataform.append('code',data);
+        dataform.append('name','fft1');
+        this.$http.
+          post(url,dataform)
+            .then(response=>{
+              datares=response.data;
+              this.freq=datares.freq;
+              this.time=datares.time;
+              this.magmax = datares.max;
+              this.magmin = datares.min;
+              
+              // console.log('dataRetMag:');
+              for (var i = 0; i < datares.mag.length; i++) {
+                  for (var j = 0; j < datares.mag[i].length; j++) {
+                      this.mag.push([i, j, datares.mag[i][j]]);
+                  }
+              }
+              this.$refs.HeatmapFFT1.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
+            })
+            .catch(function(error){
+          })
+          //console.log("test1");
+      },
+
+      doPostArray1(url,data){
+        let datares=[];
+        var dataRetfreq=[];
+        var dataRettime=[];
+        var dataRetmag=[];
+        let dataform = new FormData();
+        dataform.append('code',data);
+        dataform.append('name','fft1');
+        this.$http.
+          post(url,dataform)
+            .then(response=>{
+              datares=response.data;
+              this.freq=datares.freq;
+              this.time=datares.time;
+              this.magmax = datares.max;
+              this.magmin = datares.min;
+              
+              // console.log('dataRetMag:');
+              for (var i = 0; i < datares.mag.length; i++) {
+                  for (var j = 0; j < datares.mag[i].length; j++) {
+                      this.mag.push([i, j, datares.mag[i][j]]);
+                  }
+              }
+              this.$refs.HeatmapFFT2.updateEchart(this.freq,this.time,this.mag, this.magmax, this.magmin);
+            })
+            .catch(function(error){
+          })
+          //console.log("test1");
+      },
+//展示设备1的统计学特征
+      showData(option,index){
+        var url="http://127.0.0.1:8000/users/parameters";
+        var data=this.$refs.mainRSSIChart.store_data;
+        console.log(data);
+        this.StatValue = this.doPost(url,data);
+        console.log(this.StatValue)
+        this.$refs.statChart1.myEcharts();
+      },
+//展示设备2的统计学特征
+      showDataDevice(option,index){
+        var url="http://127.0.0.1:8000/users/parameters";
+        var data=this.$refs.mainRSSIChart1.store_data;
+        console.log(data);
+        this.StatValue2 = this.doPost(url,data);
+        this.$refs.statChart2.myEcharts();
+      },
+//显示设备1的时序细粒度特征
+      showFineTimeData(option,index){
+        var url="http://127.0.0.1:8000/users/rtfinedata";
+        var data=this.$refs.mainRSSIChart.store_data;
+        this.FineValue = this.doPost(url,data);
+        this.fineValueLength=this.FineValue.length;
+        this.$refs.fineChart1.myEcharts();
+        // this.FineValue=this.fineGrainedPower(this.$refs.mainRSSIChart1.store_data);
+        // this.fineValueLength=this.FineValue.length;
+      },
+//显示设备2的时序细粒度特征
+      showFineTimeData1(option, index){
+        var url="http://127.0.0.1:8000/users/rtfinedata";
+        var data=this.$refs.mainRSSIChart1.store_data;
+        this.FineValue2 = this.doPost(url,data);
+        this.fineValueLength2=this.FineValue.length;
+        this.$refs.fineChart2.myEcharts();
+      },
+
 //展示设备1的FFT
       showFFT(option, index){
-        var url="http://127.0.0.1:8000/users/device1";
-        var data=this.$refs.mainRSSIChart1.store_data;
-        this.fftSerial = this.doPost(url,data);
-        console.log(this.fftSerial)
+        var url="http://127.0.0.1:8000/users/fftonline";
+        var data=this.$refs.mainRSSIChart.store_data;  
+        this.doPostArray(url,data);
+        
       },
-//展示设备2的FFT
-      // updateChartFFT(data)
-      // {
-      // },
+
 //展示设备2的FFT
       showFFT2(option, index){
-        var url="http://127.0.0.1:8000/users/device1";
-        var data=this.$refs.mainRSSIChart2.store_data;
-        this.fftSeria2 = this.doPost(url,data);
-        console.log(this.fftSeria2)
+        var url="http://127.0.0.1:8000/users/fftonline";
+        var data=this.$refs.mainRSSIChart1.store_data;  
+        this.doPostArray1(url,data);
+        // this.fftSeria2 = this.doPost(url,data);
+        // console.log(this.fftSeria2)
       },
-      //计算序列的一些特征
-      //1. 最大值
-      maxSerial(erialData){
-          return this.$jstat.max(erialData);
-      },
-      //2. 最小值
-      minSerial(erialData){
-          return this.$jstat.min(erialData);
-      },
-      //3. 平均值
-      averSerial(erialData){
-        return this.$jstat.mean(erialData);
-      },
-      //4.平方误差
-      sumSqeErro(erialData){
-        return this.$jstat.sumsqerr(erialData); 
-      },
-      //5.平方和
-      SumSquare(erialData){
-          return this.$jstat.sumsqrd(erialData);
-      },
-      //6.  几何平均值
-      Geomean(erialData){
-        return this.$jstat.geomean(erialData)
-      },
-      //7. 方差
-      varianceInfo(erialData){
-        return this.$jstat.variance(erialData)
-      },
-
-      fineGrainedPower(erialData){
-        for(var i=0;i<erialData.length;i++){
-          erialData[i] =10**(erialData[i]/10);
-        }
-        return erialData;
-        // return erialData.length;
-        // 10**(erialData/10);
-      },
-
-      // RSS_power = 10.^((training_data(:,2:y)/10));
-    
-      initBigChart(index, option) {
-        let chartData = {
-          datasets: [{
-            fill: true,
-            borderColor: config.colors.primary,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: config.colors.primary,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: config.colors.primary,
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: this.bigLineChart.allData[index]
-          }],
-          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-        }
-
-        this.bigLineChart.chartData = chartData;
-        this.bigLineChart.activeIndex = index;
-      }
     },
     mounted() {
       this.i18n = this.$i18n;
