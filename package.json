@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "chart.js": "^2.7.3",
+    "chart.js": "^2.9.4",
     "echarts": "^4.7.0",
     "fft": "^0.2.1",
     "fft-js": "0.0.12",
